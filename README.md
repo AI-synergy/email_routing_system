@@ -1,4 +1,4 @@
-# Grant Email Triage – README
+# Intelligent Inquiry Routing System for Donation Management – README
 
 ## Overview
 

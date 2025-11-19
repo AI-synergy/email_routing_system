@@ -1,0 +1,379 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -208,
+        -96
+      ],
+      "id": "0df90f16-3aa4-49a1-a530-03b9735cf934",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "fjrlStvHWjisalgr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.text }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "New Application",
+              "description": "Emails in which the sender is clearly submitting, proposing, or expressing intent to apply for a new grant or project funding. This includes inquiries about how to apply, submissions of project concepts, or messages indicating they want to start a new application."
+            },
+            {
+              "category": "Status Update",
+              "description": "Emails where the sender is asking about the progress, review stage, outcome, or any update related to a previously submitted grant application. These messages refer to an existing application, past submission, or reference number.\n"
+            },
+            {
+              "category": "General Question",
+              "description": "Emails that ask for information about the grant program but do not submit an application and do not refer to an existing one. These typically include questions about eligibility, deadlines, guidelines, funding rules, required documents, or general processes."
+            },
+            {
+              "category": "Irrelevant",
+              "description": "Emails that are not about grants, funding, or the organization’s programs. This includes spam, sales/marketing messages, unrelated requests, misdirected inquiries, or general communication that has nothing to do with applying for or managing grants."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        16,
+        -128
+      ],
+      "id": "588ce432-d661-49c0-8d60-9c24c0fe666f",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        16,
+        112
+      ],
+      "id": "5c70f023-e6c6-4e97-94fc-2d3a9454ad0d",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "65xvlMUtI9PdvB6R",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        688,
+        16
+      ],
+      "id": "ae7abf19-0417-47b1-a762-8770b448c0a4",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "65xvlMUtI9PdvB6R",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        736,
+        272
+      ],
+      "id": "121f9c2e-7d1d-4cbc-8623-60aca5059dff",
+      "name": "Groq Chat Model2",
+      "credentials": {
+        "groqApi": {
+          "id": "65xvlMUtI9PdvB6R",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.text }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "Organization Name",
+              "description": "The name of the company, institution, NGO, or group that the sender represents. This is usually mentioned in the signature, header, or when the sender introduces themselves (e.g., “I am writing on behalf of Green Future e.V.”). If the email comes from an individual without mentioning any affiliation, this value should be considered missing."
+            },
+            {
+              "name": "Contact Person",
+              "description": "The full name of the individual writing or signing the email. This is typically found in the greeting, signature block, or closing line (e.g., “Kind regards, Thomas Berger”). If no human name appears in the email, the value should be considered missing."
+            },
+            {
+              "name": "Project Title",
+              "description": "The specific name or short descriptive title of the project the sender is submitting, describing, or referring to. This can appear in the subject line or body (e.g., “Our project, Green Schools Initiative”). If the sender does not clearly name a project, this value should be considered missing."
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value. STrictly output should be in JSON format"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        576,
+        -112
+      ],
+      "id": "ed34962a-a979-4cf4-8a07-a0788bb0a34a",
+      "name": "Status update extractor"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.text }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "Organization Name",
+              "description": "The name of the company, institution, NGO, or group that the sender represents. This is usually mentioned in the signature, header, or when the sender introduces themselves (e.g., “I am writing on behalf of Green Future e.V.”). If the email comes from an individual without mentioning any affiliation, this value should be considered missing."
+            },
+            {
+              "name": "Contact Person",
+              "description": "The full name of the individual writing or signing the email. This is typically found in the greeting, signature block, or closing line (e.g., “Kind regards, Thomas Berger”). If no human name appears in the email, the value should be considered missing."
+            },
+            {
+              "name": "Project Title",
+              "description": "The specific name or short descriptive title of the project the sender is submitting, describing, or referring to. This can appear in the subject line or body (e.g., “Our project, Green Schools Initiative”). If the sender does not clearly name a project, this value should be considered missing."
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value. STrictly output should be in JSON format"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        608,
+        144
+      ],
+      "id": "e64097b6-d918-4024-8526-ca1a310d2920",
+      "name": "general question extractor"
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "IMPORTANT"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        368,
+        -288
+      ],
+      "id": "cf88e64d-45da-4d63-bed6-d05d97b65882",
+      "name": "high priority",
+      "webhookId": "917d547e-3a67-4a53-a35a-f20d74d047c0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "fjrlStvHWjisalgr",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.0-flash-lite",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.0-flash-lite"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an assistant generating a professional auto-reply email for a grant-giving organization.\n\nYour task:\n- Write a formal, friendly reply email acknowledging receipt of a new grant application inquiry.\n- Use the following extracted variables only if they exist:\n- The application portal link is: [to be provided]\n\nHard Output Rules (MANDATORY):\n- Output ONLY the final email body as plain text.\n- Do NOT include any labels such as “Email body:”, “Email:”, “Response:”, etc.\n- Do NOT include any extra text before the greeting (no links, no summaries, no variable listings).\n- Do NOT wrap the output in quotes or code fences.\n- Do NOT include placeholders like [Organization Name] or [Grant Team].\n- If organization_name is missing, use “Grant Management Team” in the closing.\n- The FIRST line of the output MUST start with “Dear”.\n\n\nBelow is the email you need to reply :\n{{ $('Gmail Trigger').item.json.text }}\n",
+              "role": "model"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        576,
+        -288
+      ],
+      "id": "e8a7a5df-c6cd-44a1-9027-e46c1b214122",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "SKzqYb4CC78UAEC9",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "thread",
+        "operation": "reply",
+        "threadId": "={{ $('high priority').item.json.threadId }}",
+        "messageId": "={{ $('high priority').item.json.id }}",
+        "message": "={{ $json.content.parts[0].text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        928,
+        -288
+      ],
+      "id": "ef01aa88-877d-469b-a2b9-20c27fb570b7",
+      "name": "Auto reply",
+      "webhookId": "c9593c67-fba5-4eff-b999-504acd433289",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "fjrlStvHWjisalgr",
+          "name": "Gmail account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "high priority",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Status update extractor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "general question extractor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Status update extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "general question extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "high priority": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Auto reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4b0bc9a4-2de1-4ff4-a430-cdbd6b57d68b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8d7fe9dd0a8ac0461b1e3574b8288e70f573960c8f02dd36dad6268898c8c85d"
+  },
+  "id": "ShO7l27SPdjNZK4I",
+  "tags": []
+}

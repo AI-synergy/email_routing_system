@@ -3,9 +3,9 @@
 ## Overview
 
 This project implements an automated grant-email triage workflow using **n8n**, **LLM-powered classification**, **entity extraction**, and **Gmail** integration.
-The workflow processes incoming messages, classifies them into meaningful categories, extracts structured entities, and automatically replies to **New Application** emails.
+The workflow processes incoming messages, classifies them into four categories, extracts structured entities, and automatically replies to **New Application** emails.
 
-The exported workflow is included in `workflow.json`.
+The exported workflow is included in `my_workflow.json`.
 
 ---
 
@@ -94,7 +94,7 @@ Instead, it logs the extracted information and continues.
 * Incoming emails contain identifiable plaintext body content (`message.text`).
 * The LLM prompts ensure clean extraction and prevent hallucinated data.
 * API keys for Groq, Gemini, and Gmail are configured inside n8n’s credentials manager.
-* Application URL and other constants are stored as n8n environment variables.
+* Application URL and other constants can be stored as n8n environment variables.
 
 ---
 
@@ -148,7 +148,6 @@ Once activated:
 | ---------------------------- | ------------------------------------------------------ |
 | `README.md`                  | Documentation for architecture, setup, and assumptions |
 | `workflow.json`              | Exported n8n workflow used in this project             |
-| `azure-function/` (optional) | Placeholder if you later add custom Azure Functions    |
 
 ---
 
